@@ -15,6 +15,10 @@ from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
@@ -72,4 +76,43 @@ class VerifyEmail(views.APIView):
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+# class LoginAPIView(APIView):
+    # def post(self, request):
+        # email = request.data.get("email")
+        # password = request.data.get("password")
+
+        # if email is None or password is None:
+            # return Response(
+                # {"error": "Both email and password are required"},
+                # status=status.HTTP_400_BAD_REQUEST
+            # )
+
+        # user = authenticate(email=email, password=password)
+
+        # if not user:
+            # return Response(
+                # {"error": "Invalid email or password"},
+                # status=status.HTTP_401_UNAUTHORIZED
+            # )
+
+        # # You can handle the successful login as needed
+        # # For example, you might want to generate an access token here
+        # # and return it in the response to implement user authentication.
+
+        # # If you are using a library like Django Rest Framework Simple JWT,
+        # # you can generate an access token and return it in the response.
+
+        # return Response(
+            # {"message": "Login successful", "user_id": user.id},
+            # status=status.HTTP_200_OK
+        # )
+
+class LoginAPIView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 

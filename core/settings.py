@@ -151,3 +151,7 @@ EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS"))  # Convert to boolean
 # EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL"))  # You can add this if needed
 
 
+
+# SIMPLE_JWT = {
+    # 'USER_ID_FIELD': 'user.id',
+# }
