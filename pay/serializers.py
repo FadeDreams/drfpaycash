@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Expense
+from .models import Pay
 
 
-class ExpensesSerializer(serializers.ModelSerializer):
+class PaysSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Expense
+        model = Pay
         fields = ['id', 'date', 'description', 'amount', 'category']

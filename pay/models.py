@@ -5,7 +5,7 @@ from accounts.models import User
 # Create your models here.
 
 
-class Expense(models.Model):
+class Pay(models.Model):
 
     CATEGORY_OPTIONS = [
         ('ONLINE_SERVICES', 'ONLINE_SERVICES'),
@@ -28,5 +28,5 @@ class Expense(models.Model):
         ordering: ['-updated_at']
 
     def __str__(self):
-        return str(self.owner)+'s income'
+        return str(self.owner)+'s cash'
 

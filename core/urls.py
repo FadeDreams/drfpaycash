@@ -26,7 +26,7 @@ schema_view = get_schema_view(
         default_version='v1',
         description="Test description",
         terms_of_service="https://www.ourapp.com/policies/terms/",
-        contact=openapi.Contact(email="contact@expenses.local"),
+        contact=openapi.Contact(email="contact@pays.local"),
         license=openapi.License(name="Test License"),
     ),
     public=True,
@@ -37,7 +37,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('accounts.urls')),
-
+    path('pay/', include('pay.urls')),
+    # path('cash/', include('cash.urls')),
 
     path('', schema_view.with_ui('swagger',
                                  cache_timeout=0), name='schema-swagger-ui'),
