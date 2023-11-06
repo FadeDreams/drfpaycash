@@ -38,7 +38,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('accounts.urls')),
     path('pay/', include('pay.urls')),
-    # path('cash/', include('cash.urls')),
+    path('cash/', include('cash.urls')),
 
     path('', schema_view.with_ui('swagger',
                                  cache_timeout=0), name='schema-swagger-ui'),

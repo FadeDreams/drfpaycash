@@ -4,20 +4,26 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Pay
 from .serializers import PaysSerializer
 from .permissions import IsOwner
+from rest_framework.pagination import PageNumberPagination
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def pay_list(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10  # Set the number of items per page here
+
     if request.method == 'GET':
         pays = Pay.objects.filter(owner=request.user)
-        serializer = PaysSerializer(pays, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        result_page = paginator.paginate_queryset(pays, request)
+        serializer = PaysSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
     elif request.method == 'POST':
         serializer = PaysSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(owner=request.user)
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
