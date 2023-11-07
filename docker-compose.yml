@@ -10,30 +10,26 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
-    env_file:
-      - ./.env
+      - dev-static-data:/vol/web
     command: >
       sh -c "python manage.py wait_db &&
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
-    environment:
-      - DB_HOST=dbpg14
-      - DB_NAME=fitnessdb
-      - DB_USER=fitness
-      - DB_PASS=fitness
+    env_file:
+      - ./.envd  # Use the envd file for environment variables
     depends_on:
-      - dbpg14
+      - db
 
-  dbpg14:
+  db:
     image: postgres:14-alpine
     volumes:
-      - fitnessdbdata:/var/lib/postgresql/data
+      - dev-db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=fitnessdb
-      - POSTGRES_USER=fitness
-      - POSTGRES_PASSWORD=fitness
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
 
 volumes:
-  fitnessdbdata:
-
+  dev-db-data:
+  dev-static-data:
 
