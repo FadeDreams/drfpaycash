@@ -8,7 +8,7 @@ from . import views
 # ]
 
 urlpatterns = [
-    path('pays/', views.pay_list, name='pay-list'),
-    path('pays/<int:id>/', views.pay_detail, name='pay-detail'),
+    path('pays/', views.pay_list, name='pay_list'),
+    path('pays/<int:id>/', views.pay_detail, name='pay_detail'),
 ]
 

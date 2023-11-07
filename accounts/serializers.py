@@ -11,22 +11,22 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
-        max_length=68, min_length=6, write_only=True)
+        max_length=68, min_length=1, write_only=True)
 
     default_error_messages = {
         'username': 'The username should only contain alphanumeric characters'}
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password']
+        fields = ['email', 'password']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
         username = attrs.get('username', '')
 
-        if not username.isalnum():
-            raise serializers.ValidationError(
-                self.default_error_messages)
+        # if not username.isalnum():
+            # raise serializers.ValidationError(
+                # self.default_error_messages)
         return attrs
 
     def create(self, validated_data):
@@ -44,19 +44,30 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255, min_length=3)
     password = serializers.CharField(
-        max_length=68, min_length=6, write_only=True)
+        max_length=68, min_length=1, write_only=True)
     username = serializers.CharField(
         max_length=255, min_length=3, read_only=True)
 
     tokens = serializers.SerializerMethodField()
 
     def get_tokens(self, obj):
+        print(obj)
+        email = obj['email']
         user = User.objects.get(email=obj['email'])
+        print(user.email)
+        refresh_token = RefreshToken.for_user(user)
+        access_token = refresh_token.access_token
 
         return {
-            'refresh': user.tokens()['refresh'],
-            'access': user.tokens()['access']
+            'refresh': str(refresh_token),
+            'access_token': str(access_token)
         }
+
+        # return {
+            # 'refresh': user.tokens()['refresh'],
+            # 'access': user.tokens()['access']
+        # }
+        return{}
 
     class Meta:
         model = User
@@ -68,21 +79,23 @@ class LoginSerializer(serializers.ModelSerializer):
         filtered_user_by_email = User.objects.filter(email=email)
         user = auth.authenticate(email=email, password=password)
 
-        if filtered_user_by_email.exists() and filtered_user_by_email[0].auth_provider != 'email':
-            raise AuthenticationFailed(
-                detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
+        # if filtered_user_by_email.exists() and filtered_user_by_email[0].auth_provider != 'email':
+            # raise AuthenticationFailed(
+                # detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
 
         if not user:
             raise AuthenticationFailed('Invalid credentials, try again')
         if not user.is_active:
-            raise AuthenticationFailed('Account disabled, contact admin')
+            ...
+            # raise AuthenticationFailed('Account disabled, contact admin')
         if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
+            ...
+            # raise AuthenticationFailed('Email is not verified')
 
         return {
             'email': user.email,
             'username': user.username,
-            'tokens': user.tokens
+            # 'tokens': user.tokens
         }
 
         return super().validate(attrs)
