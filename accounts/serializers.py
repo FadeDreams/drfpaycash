@@ -153,7 +153,6 @@ class LogoutSerializer(serializers.Serializer):
         return attrs
 
     def save(self, **kwargs):
-
         try:
             RefreshToken(self.token).blacklist()
 

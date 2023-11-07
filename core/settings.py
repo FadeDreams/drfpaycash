@@ -46,11 +46,13 @@ INSTALLED_APPS = [
 ] +  [
 
         'corsheaders',
-        'accounts',
         'rest_framework',
+        'rest_framework_simplejwt.token_blacklist',
+        'accounts',
         'drf_yasg',
         'cash',
         'pay',
+        'social_auth',
     ]
 
 MIDDLEWARE = [
@@ -70,7 +72,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Replace 'myapp' with your app's name
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,6 +146,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'NON_FIELD_ERRORS_KEY': 'error',
+    # 'EXCEPTION_HANDLER': 'utils.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'exceptionhandler.custom_exception_handler.custom_exception_handler',
+
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
@@ -162,10 +167,18 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS"))  # Convert to boolean
 # EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL"))  # You can add this if needed
 
-
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+SOCIAL_SECRET = os.getenv("SOCIAL_SECRET")
 
 # SIMPLE_JWT = {
     # 'USER_ID_FIELD': 'user.id',
 # }
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
+
+# my_project/settings.py
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+SECURE_CROSS_ORIGIN_OPENER_POLICY='same-origin-allow-popups'

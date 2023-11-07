@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -21,6 +22,8 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
+AUTH_PROVIDERS = {'google': 'google', 'email': 'email'}
+
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True, db_index=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
@@ -30,6 +33,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    auth_provider = models.CharField( max_length=255, blank=False, null=False, default=AUTH_PROVIDERS.get('email'))
+
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []  # No required fields
 
@@ -38,3 +44,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+    def tokens(self):
+            refresh = RefreshToken.for_user(self)
+            return {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token)
+            }
