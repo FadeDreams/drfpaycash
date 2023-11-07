@@ -10,6 +10,8 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
+    env_file:
+      - ./.env
     command: >
       sh -c "python manage.py wait_db &&
              python manage.py migrate &&
@@ -33,4 +35,5 @@ services:
 
 volumes:
   fitnessdbdata:
+
 

@@ -98,6 +98,15 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+    # 'default': {
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'HOST': os.environ.get('DB_HOST'),
+        # 'NAME': os.environ.get('DB_NAME'),
+        # 'USER': os.environ.get('DB_USER'),
+        # 'PASSWORD': os.environ.get('DB_PASS'),
+    # }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -177,6 +186,9 @@ SOCIAL_SECRET = os.getenv("SOCIAL_SECRET")
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
+
+ALLOWED_HOSTS = ['*']
+
 
 # my_project/settings.py
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
